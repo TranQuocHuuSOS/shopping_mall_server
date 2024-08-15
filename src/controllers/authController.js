@@ -87,7 +87,7 @@ const register = asyncHandle(async(req, res)=>{
 });
 
 const login = asyncHandle(async(req, res)=>{
-    const {email, password, role} = req.body
+    const {email, password} = req.body
     const existingUser = await UserModel.findOne({email});
     if(!existingUser){
         res.status(403).json({
@@ -101,12 +101,7 @@ const login = asyncHandle(async(req, res)=>{
         throw new Error("Email or password is not correct!!!")
 
     }
-    if(existingUser.role !== role){
-        res.status(403).json({
-            message:"Role is not correct!!!"
-        });
-        throw new Error("Role is not correct!!!")
-    }
+   
     res.status(200).json({
         message:"Login successfully!!!",
         data:{
