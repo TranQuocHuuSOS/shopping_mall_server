@@ -41,13 +41,13 @@ const BookingSchema = new mongoose.Schema({
     enum: ["pending", "confirmed","completed", "cancelled"],
     default: "pending"
   },
-  totalPrice: {
-    type: Number,
-    require: true
-  },
   paymentDetails: PaymentDetailsSchema,
   notes: {
     type: String
+  },
+  deliveryAddress:{
+    type:String,
+    require:true,
   },
   createdAt: {
     type: Date,

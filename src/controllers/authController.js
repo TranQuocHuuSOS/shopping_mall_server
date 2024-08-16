@@ -101,14 +101,17 @@ const login = asyncHandle(async(req, res)=>{
         throw new Error("Email or password is not correct!!!")
 
     }
-   
+    const accessToken = await getJsonWebToken(email, existingUser.id);
+    existingUser.token= accessToken;
+    await existingUser.save();
     res.status(200).json({
         message:"Login successfully!!!",
         data:{
             id:existingUser.id,
+            fullname:existingUser.fullname,
             email:existingUser.email,
             role:existingUser.role,
-            accessToken: await getJsonWebToken(email, existingUser.id)
+            accessToken: accessToken
         }
     })
 })
@@ -156,4 +159,33 @@ const forgotPassword = asyncHandle(async(req, res)=>{
 
 })
 
-module.exports = {register, login, verification, forgotPassword};
+
+const logout = asyncHandle(async(req, res)=>{
+    const {email}= req.body;
+    const existingUser= await UserModel.findOne({email});
+    if(!existingUser){
+        res.status(403).json({
+            message:"User not found!!!",
+        })
+        throw new Error("User not found!!!");
+    }
+    existingUser.token=null;
+    await existingUser.save();
+    res.status(200).json({
+        message:"Logout successfully!!!",
+    })
+})
+
+
+const getUsers= asyncHandle(async(req, res)=>{
+    try {
+        const users= await UserModel.find({role:{$ne:'admin'}}, "");
+        res.status(200).json(users);
+    } catch (error) {
+        res.status(500).json({
+            message:'Error fetching users', error
+        })
+    }
+})
+
+module.exports = {register, login, verification, forgotPassword, logout, getUsers};

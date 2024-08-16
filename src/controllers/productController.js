@@ -4,13 +4,13 @@ const asyncHandle= require("express-async-handler");
 require('dotenv').config();
 // Tạo mới sản phẩm, mặt hàng
 const createNewProduct =asyncHandle(async(req, res)=>{
-    const {title,description, discount_percentage,original_price, discounted_price  } = req.body;
+    const {title,description, discount_percentage,original_price, discounted_price, image  } = req.body;
     if(!title || !original_price || ! discounted_price ){
         res.status(400);
         throw new Error("Please provide all required fields:title, original_price, discounted_price");
     }
     const newProduct = new ProductModel({
-        title, description, discount_percentage,original_price, discounted_price
+        title, description, discount_percentage,original_price, discounted_price, image
     })
     const savedProduct=  await newProduct.save();
     res.status(201).json({

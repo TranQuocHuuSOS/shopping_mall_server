@@ -5,8 +5,8 @@ require("dotenv").config();
 //Tạo mới booking
 
 const createBooking = asyncHandle(async (req, res) => {
-  const { user, product, totalPrice, paymentDetails = {}, notes } = req.body;
-  if (!user || !product || !totalPrice) {
+  const { user, product,  paymentDetails = {},deliveryAddress, notes } = req.body;
+  if (!user || !product  || !deliveryAddress) {
     res.status(400);
     throw new Error(
       "Please provide all required fields: user, product, totalPrice"
@@ -18,7 +18,8 @@ const createBooking = asyncHandle(async (req, res) => {
     transactionId: "",
     amount: 0
   };
-
+  console.log("product", product);
+  
   const completePaymentDetails = {
     ...defaultPaymentDetails,
     ...paymentDetails
@@ -26,8 +27,8 @@ const createBooking = asyncHandle(async (req, res) => {
   const newBooking = new BookingModel({
     user,
     product,
-    totalPrice,
     paymentDetails: completePaymentDetails,
+    deliveryAddress,
     notes
   });
   const savedBooking = await newBooking.save();
@@ -46,12 +47,14 @@ const getAllBooking = asyncHandle(async (req, res) => {
   }
   try {
     const bookings = await BookingModel.find(query)
-      .populate("user", "")
-      .populate("product", "");
+      .populate("user")
+      .populate("product");
     res.status(200).json({
       message: "Bookings fetched successfully!!!",
       data: bookings
     });
+    console.log(bookings);
+    
   } catch (error) {
     res.status(500);
     throw new Error("Error fetching bookings");

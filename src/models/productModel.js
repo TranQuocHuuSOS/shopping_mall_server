@@ -16,7 +16,9 @@ const ProductSchema = new mongoose.Schema({
     },
     discounted_price:{
         type:Number,
-        require:true,
+    },
+    image:{
+        type:String,
     },
     createdAt:{
         type:Date,
