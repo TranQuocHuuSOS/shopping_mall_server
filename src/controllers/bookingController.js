@@ -4,6 +4,7 @@ require("dotenv").config();
 
 //Tạo mới booking
 
+
 const createBooking = asyncHandle(async (req, res) => {
   const { user, product,  paymentDetails = {},deliveryAddress, notes } = req.body;
   if (!user || !product  || !deliveryAddress) {
@@ -53,7 +54,7 @@ const getAllBooking = asyncHandle(async (req, res) => {
       message: "Bookings fetched successfully!!!",
       data: bookings
     });
-    console.log(bookings);
+    
     
   } catch (error) {
     res.status(500);
@@ -91,4 +92,20 @@ const changeStatusBooking = asyncHandle(async (req, res) => {
   });
 });
 
-module.exports = { createBooking, getAllBooking, changeStatusBooking };
+const getBookingByUserId = asyncHandle (async(req, res)=>{
+  const userId = req.user._id;
+  try {
+    const bookings = await BookingModel.find({ user: userId })
+      .populate("product"); 
+    
+    res.status(200).json({
+      message: "User bookings fetched successfully!!!",
+      data: bookings
+    });
+  } catch (error) {
+    res.status(500);
+    throw new Error("Error fetching user bookings");
+  }
+})
+
+module.exports = { createBooking, getAllBooking, changeStatusBooking, getBookingByUserId };
