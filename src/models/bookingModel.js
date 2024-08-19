@@ -5,13 +5,13 @@ const PaymentDetailsSchema = new mongoose.Schema(
       type: String,
       require: true,
       enum: ["cash_on_delivery", "credit_card"],
-      default:"cash_on_delivery",
+      default: "cash_on_delivery"
     },
     status: {
       type: String,
       required: true,
       enum: ["pending", "completed", "failed"],
-      default:"pending",
+      default: "pending"
     },
     transactionId: {
       type: String,
@@ -38,16 +38,16 @@ const BookingSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ["pending", "confirmed","completed", "cancelled"],
+    enum: ["pending", "confirmed", "completed", "cancelled"],
     default: "pending"
   },
   paymentDetails: PaymentDetailsSchema,
   notes: {
     type: String
   },
-  deliveryAddress:{
-    type:String,
-    require:true,
+  deliveryAddress: {
+    type: String,
+    require: true
   },
   createdAt: {
     type: Date,
